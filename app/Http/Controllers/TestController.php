@@ -11,7 +11,8 @@ class TestController extends Controller
     {
     	$bc = new BestChange();
     	if ($bc->loadFiles()){
-    		
+    		//load currency if table is empty
+    		$bc->loadCurrencies();
     	}
 
     	return 'Hello!!!';
