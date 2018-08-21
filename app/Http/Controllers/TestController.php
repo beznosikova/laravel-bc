@@ -9,12 +9,18 @@ class TestController extends Controller
 {
     public function index()
     {
-    	$bc = new BestChange();
-    	if ($bc->loadFiles()){
-    		//load currency if table is empty
-    		$bc->loadCurrencies();
-    	}
-
+    	try {
+	    	$bc = new BestChange();
+	    	// if ($bc->loadFiles()){
+	    		$bc
+	    			->loadCurrencies()
+	    			->loadExchanges()
+	    			// ->loadRates()
+	    			;
+	    	// }
+		} catch(\Exception $e){
+		    dd($e->getMessage());
+		}
     	return 'Hello!!!';
     }
 

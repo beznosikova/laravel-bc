@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Currency extends Model
+class Exchange extends Model
 {
     protected $fillable = [
         'bc_id',
