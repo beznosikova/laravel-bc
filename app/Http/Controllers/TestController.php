@@ -11,13 +11,13 @@ class TestController extends Controller
     {
     	try {
 	    	$bc = new BestChange();
-	    	// if ($bc->loadFiles()){
+	    	if ($bc->loadFiles()){
 	    		$bc
 	    			->loadCurrencies()
 	    			->loadExchanges()
-	    			// ->loadRates()
+	    			->loadRates()
 	    			;
-	    	// }
+	    	}
 		} catch(\Exception $e){
 		    dd($e->getMessage());
 		}

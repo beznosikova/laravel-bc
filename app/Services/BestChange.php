@@ -6,6 +6,7 @@ use Storage;
 use Excel;
 use App\Exchange;
 use App\Currency;
+use App\Rate;
 use ZipArchive;
 use Illuminate\Support\Facades\Config;
 
@@ -76,7 +77,7 @@ class BestChange
 
     public function loadRates()
     {
-        // Rate::truncate();
+        Rate::truncate();
 
         set_time_limit(0);
 
@@ -94,17 +95,16 @@ class BestChange
                     $dataSet = $dataSet->merge(["{$row[0]}-{$row[1]}" => $row]);
                 }
             }
-            $page++;
+            $page++;        
         };
 
         $rezult = $dataSet->map(function ($item, $key) {
             return $this->getClearnData($item, [0, 1, 2, 3, 4], ['bc_id_from', 'bc_id_to', 'bc_id_exchange', 'rate_from', 'rate_to']);
         });     
 
-        // array_values
-        // dump($rezult->toArray());
+        DB::table('rates')->insert($rezult->toArray());
+        dd('saving to db');   
 
-        dd('saving to db');
         return $this;
     }
 
