@@ -17,6 +17,6 @@ class Rate extends Model
 
     public function exchange()
     {
-        return $this->belongsTo('App\Exchange');
+        return $this->belongsTo('App\Exchange', 'bc_id_exchange', 'bc_id');
     }    
 }
