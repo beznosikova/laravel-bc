@@ -24,6 +24,17 @@ class BestChange
     const TMP_FILE_RATES = self::TMP_UNZIPPED . DIRECTORY_SEPARATOR . "bm_rates.dat";
     const CHUNK_SIZE = 500;
 
+    public function run()
+    {
+        if ($this->loadFiles()){
+            $this
+                ->loadCurrencies()
+                ->loadExchanges()
+                ->loadRates()
+                ;
+        }        
+    }
+
     public function loadFiles()
     {
         Storage::put(self::TMP_FILE, file_get_contents(self::BC_URL));

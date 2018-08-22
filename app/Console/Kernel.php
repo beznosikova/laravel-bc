@@ -26,14 +26,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $bc = new BestChange();
-            if ($bc->loadFiles()){
-                $bc
-                    ->loadCurrencies()
-                    ->loadExchanges()
-                    ->loadRates()
-                    ;
-            }
+            $bc = (new BestChange())->run();
         })->everyMinute();
     }
 
