@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Currency;
 use App\Rate;
 use App\Exchange;
-use App\Services\BestChange;
 use Illuminate\Http\Request;
 
 class MainController extends Controller
@@ -27,23 +26,5 @@ class MainController extends Controller
 
     	$currencies = Currency::orderBy('title', 'ASC')->get();
     	return view('bc', compact('currencies','give', 'get', 'rate'));
-    }
-
-    public function load()
-    {
-    	try {
-	    	$bc = new BestChange();
-	    	if ($bc->loadFiles()){
-	    		$bc
-	    			->loadCurrencies()
-	    			->loadExchanges()
-	    			->loadRates()
-	    			;
-	    	}
-		} catch(\Exception $e){
-		    dd($e->getMessage());
-		}
-
-        return 'Done!';
     }
 }

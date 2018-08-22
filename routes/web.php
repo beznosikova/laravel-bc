@@ -14,4 +14,3 @@
 Route::get('/', 'MainController@index')->name('home');
 Route::post('/', 'MainController@index')->name('home.post');
 
-Route::get('load', 'MainController@load')->name('load');

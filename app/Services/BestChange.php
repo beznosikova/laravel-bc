@@ -24,11 +24,6 @@ class BestChange
     const TMP_FILE_RATES = self::TMP_UNZIPPED . DIRECTORY_SEPARATOR . "bm_rates.dat";
     const CHUNK_SIZE = 500;
 
-    public function __construct()
-    {
-        dump('constructor');
-    }
-
     public function loadFiles()
     {
         Storage::put(self::TMP_FILE, file_get_contents(self::BC_URL));
@@ -103,7 +98,6 @@ class BestChange
         });     
 
         DB::table('rates')->insert($rezult->toArray());
-        dd('saving to db');   
 
         return $this;
     }
