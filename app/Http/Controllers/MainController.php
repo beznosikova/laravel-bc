@@ -6,6 +6,7 @@ use App\Currency;
 use App\Rate;
 use App\Exchange;
 use Illuminate\Http\Request;
+use App\Services\BestChange;
 
 class MainController extends Controller
 {
@@ -26,5 +27,15 @@ class MainController extends Controller
 
     	$currencies = Currency::orderBy('title', 'ASC')->get();
     	return view('bc', compact('currencies','give', 'get', 'rate'));
+    }
+
+    public function load()
+    {
+        try {
+        	$bcLoaded = (new BestChange())->run();
+            return ($bcLoaded) ? "success" : "fail";
+        } catch (\Exception $e) {
+            dump($e->getMessage());
+        }
     }
 }

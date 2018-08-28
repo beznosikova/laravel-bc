@@ -17,7 +17,6 @@ class CreateExchangesTable extends Migration
             $table->increments('id');
             $table->integer('bc_id')->unsigned()->index();
             $table->string('title', 100);
-            $table->string('slug');
         });
     }
 

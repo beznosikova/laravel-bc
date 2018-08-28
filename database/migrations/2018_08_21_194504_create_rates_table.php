@@ -15,12 +15,25 @@ class CreateRatesTable extends Migration
     {
         Schema::create('rates', function (Blueprint $table) {
             $table->increments('id');
+
             $table->integer('bc_id_from')->unsigned();
-            $table->foreign('bc_id_from')->references('bc_id')->on('currencies');
+            $table->foreign('bc_id_from')
+                ->references('bc_id')
+                ->on('currencies')
+                ->onDelete('cascade');
+
             $table->integer('bc_id_to')->unsigned();
-            $table->foreign('bc_id_to')->references('bc_id')->on('currencies');
+            $table->foreign('bc_id_to')
+                ->references('bc_id')
+                ->on('currencies')
+                ->onDelete('cascade');
+
             $table->integer('bc_id_exchange')->unsigned();
-            $table->foreign('bc_id_exchange')->references('bc_id')->on('exchanges');
+            $table->foreign('bc_id_exchange')
+                ->references('bc_id')
+                ->on('exchanges')
+                ->onDelete('cascade');
+                
             $table->string('rate_from');
             $table->string('rate_to');
         });
