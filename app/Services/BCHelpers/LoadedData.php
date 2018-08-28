@@ -5,7 +5,14 @@ use League\Csv\{Reader, Statement};
 
 abstract class LoadedData
 {
-	abstract public function getCollectionFromData():array;
+	public function getCollectionFromData():array
+	{
+        $csvRows = $this->getCsvRows(Storage::path($this->pathToFile));
+        foreach ($csvRows as $row) {
+            $this->dataSet->push($row);
+        }		
+        return $this->getClearnData()->toArray();
+	}
 	
     const CHUNK_SIZE = 500;
 

@@ -23,26 +23,31 @@ class LoadedRate extends LoadedData
 
         while (count($csvRows = $this->getCsvRows(Storage::path($this->pathToFile), $page)) > 0) {
             foreach ($csvRows as $row) {
-                $key = "{$row[0]}-{$row[1]}";
-
-                $existedRow = $this->dataSet->only($key);
-
-                if ($existedRow->isEmpty()){
-
-                    $this->dataSet = $this->dataSet->merge(["{$row[0]}-{$row[1]}" => $row]);
-
-                } elseif ($this->compareRates($existedRow->get($key), $row)) {
-
-                    $this->dataSet->forget($key);
-                    $this->dataSet = $this->dataSet->merge(["{$row[0]}-{$row[1]}" => $row]);
-
-                }
+                $this->selectBestRate($row);
             }
             $page++;        
         };
 
         return $this->getClearnData()->toArray();
 	}
+
+    private function selectBestRate($row)
+    {
+        $key = "{$row[0]}-{$row[1]}";
+
+        $existedRow = $this->dataSet->only($key);
+
+        if ($existedRow->isEmpty()){
+
+            $this->dataSet = $this->dataSet->merge(["{$row[0]}-{$row[1]}" => $row]);
+
+        } elseif ($this->compareRates($existedRow->get($key), $row)) {
+
+            $this->dataSet->forget($key);
+            $this->dataSet = $this->dataSet->merge(["{$row[0]}-{$row[1]}" => $row]);
+
+        }        
+    }
 
     private function compareRates(array $first, array $second)
     {

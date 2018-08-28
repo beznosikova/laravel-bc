@@ -11,13 +11,4 @@ class LoadedCurrency extends LoadedData
             0 => 'bc_id', 
             2 => 'title', 
         ];
-
-	public function getCollectionFromData():array
-	{
-        $csvRows = $this->getCsvRows(Storage::path($this->pathToFile));
-        foreach ($csvRows as $row) {
-            $this->dataSet->push($row);
-        }       
-        return $this->getClearnData()->toArray();
-	}
 }
