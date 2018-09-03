@@ -22,7 +22,7 @@ class ZipExtractTo extends AbstractPlugin
      *
      * @return bool True on success, false on failure.
      */
-    public function handle($path, $zipFilePath)
+    public function handle($zipFilePath, $path)
     {
         $path = $this->cleanPath($path);
 

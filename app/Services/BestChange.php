@@ -2,14 +2,18 @@
 namespace App\Services;
 
 use DB;
+// use ZipArchive;
 use Storage;
-use ZipArchive;
 
 use App\{Exchange, Currency, Rate};
-use App\Services\Helpers\{LoadedCurrency, LoadedExchange, LoadedRate, LoadedData};
+use App\Services\Helpers\{
+    LoadedCurrency, 
+    LoadedExchange, 
+    LoadedRate, 
+    LoadedData};
+use App\Services\BCInterfaces\BCFileSystemInterface;
 
 use Illuminate\Support\Facades\Config;
-use GuzzleHttp\Client;
 
 class BestChange
 {
@@ -23,12 +27,19 @@ class BestChange
     const TMP_FILE_EXCHANGE = self::TMP_UNZIPPED . DIRECTORY_SEPARATOR . "bm_exch.dat";
     const TMP_FILE_RATES = self::TMP_UNZIPPED . DIRECTORY_SEPARATOR . "bm_rates.dat";
 
+    protected $fileClient;
+
+    public function __construct(BCFileSystemInterface $fileClient)
+    {
+        $this->fileClient = $fileClient;
+    }
+
     public function run()
     {
         if ($this->loadFiles()){
-            $this->loadDataDB((new LoadedCurrency(self::TMP_FILE_CURRENCY)), 'currencies');
-            $this->loadDataDB((new LoadedExchange(self::TMP_FILE_EXCHANGE)), 'exchanges');
-            $this->loadDataDB((new LoadedRate(self::TMP_FILE_RATES)), 'rates', false);
+            // $this->loadDataDB((new LoadedCurrency(self::TMP_FILE_CURRENCY)), 'currencies');
+            // $this->loadDataDB((new LoadedExchange(self::TMP_FILE_EXCHANGE)), 'exchanges');
+            // $this->loadDataDB((new LoadedRate(self::TMP_FILE_RATES)), 'rates', false);
             return true;
         } 
         return false;
@@ -36,15 +47,19 @@ class BestChange
 
     public function loadFiles()
     {
-        $client = new Client(['http_errors' => false]);
-        $response = $client->get(env('BC_URL', self::BC_URL));        
-        
-        if ($response->getStatusCode() !== 200)
-            return;
+        $loaded = $this->fileClient->load(
+                    env('BC_URL', self::BC_URL), 
+                    self::TMP_FILE
+                );
 
-        Storage::put(self::TMP_FILE, (string)$response->getBody());
-        $url = Storage::path(self::TMP_FILE);
-        return Storage::extractTo(self::TMP_UNZIPPED, $url);
+        if (!$loaded){
+            return $loaded;
+        } else {
+            return $this->fileClient->extract(
+                    self::TMP_FILE, 
+                    self::TMP_UNZIPPED
+                );
+        }
     }
 
     public function loadDataDB(

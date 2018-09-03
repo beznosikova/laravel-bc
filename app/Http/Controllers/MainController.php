@@ -7,6 +7,9 @@ use App\Rate;
 use App\Exchange;
 use Illuminate\Http\Request;
 use App\Services\BestChange;
+use App\Services\Helpers\{
+    BCFileSystem, 
+    };
 
 class MainController extends Controller
 {
@@ -32,8 +35,8 @@ class MainController extends Controller
     public function load()
     {
         try {
-        	$bcLoaded = (new BestChange())->run();
-            return ($bcLoaded) ? "success" : "fail";
+            $fileSystem = new BCFileSystem();
+            return ((new BestChange($fileSystem))->run()) ? "success" : "fail";
         } catch (\Exception $e) {
             dump($e->getMessage());
         }
